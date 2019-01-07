@@ -199,7 +199,11 @@ export interface FormikConfig<Values> extends FormikSharedConfig {
   /**
    * Submission handler
    */
-  onSubmit: (values: Values, formikActions: FormikActions<Values>) => void;
+  onSubmit: (
+    values: Values,
+    formikActions: FormikActions<Values>,
+    target?: EventTarget
+  ) => void;
   /**
    * A Yup Schema or a function that returns a Yup schema
    */

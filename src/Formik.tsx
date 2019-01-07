@@ -426,10 +426,10 @@ export class Formik<Values = FormikValues> extends React.Component<
       }
     }
 
-    this.submitForm();
+    this.submitForm(e && e.target);
   };
 
-  submitForm = () => {
+  submitForm = (target?: EventTarget) => {
     // Recursively set all values to `true`.
     this.setState(prevState => ({
       touched: setNestedObjectValues<FormikTouched<Values>>(
@@ -448,9 +448,8 @@ export class Formik<Values = FormikValues> extends React.Component<
 
       if (isValid) {
         try {
-          await this.executeSubmit();
+          await this.executeSubmit(target);
         } catch (e) {
-          // todo
           throw e;
         } finally {
           this.setState({ isSubmitting: false });
@@ -462,8 +461,12 @@ export class Formik<Values = FormikValues> extends React.Component<
     });
   };
 
-  executeSubmit = async () => {
-    await this.props.onSubmit(this.state.values, this.getFormikActions());
+  executeSubmit = async (target?: EventTarget) => {
+    await this.props.onSubmit(
+      this.state.values,
+      this.getFormikActions(),
+      target
+    );
   };
 
   handleBlur = (eventOrString: any): void | ((e: any) => void) => {
