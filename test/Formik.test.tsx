@@ -1005,7 +1005,7 @@ describe('<Formik>', () => {
     expect(getProps().isSubmitting).toBe(false);
     expect(getProps().isValidating).toBe(false);
     // we call set isValidating synchronously
-    const validatePromise = getProps().submitForm();
+    const validatePromise = await getProps().submitForm();
     // so it should change
     expect(getProps().isSubmitting).toBe(true);
     expect(getProps().isValidating).toBe(true);

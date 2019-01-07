@@ -441,11 +441,20 @@ export class Formik<Values = FormikValues> extends React.Component<
       submitCount: prevState.submitCount + 1,
     }));
 
-    return this.runValidations(this.state.values).then(combinedErrors => {
+    return this.runValidations(this.state.values).then(async combinedErrors => {
       this.setState({ isValidating: false });
+
       const isValid = Object.keys(combinedErrors).length === 0;
+
       if (isValid) {
-        this.executeSubmit();
+        try {
+          await this.executeSubmit();
+        } catch (e) {
+          // todo
+          throw e;
+        } finally {
+          this.setState({ isSubmitting: false });
+        }
       } else if (this.didMount) {
         // ^^^ Make sure Formik is still mounted before calling setState
         this.setState({ isSubmitting: false });
@@ -453,8 +462,8 @@ export class Formik<Values = FormikValues> extends React.Component<
     });
   };
 
-  executeSubmit = () => {
-    this.props.onSubmit(this.state.values, this.getFormikActions());
+  executeSubmit = async () => {
+    await this.props.onSubmit(this.state.values, this.getFormikActions());
   };
 
   handleBlur = (eventOrString: any): void | ((e: any) => void) => {
